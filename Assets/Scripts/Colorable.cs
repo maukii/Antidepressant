@@ -45,43 +45,10 @@ public class Colorable : MonoBehaviour
         rend.SetPropertyBlock(Mbp);
     }
 
-
-    //TODO::
-    //Call from main camera script which checks: 
-    //Object which got clicked(this)
-    //Vertex position of click(so effect can start there)
-    void OnMouseDown()
-    {
-        if (!Colorized)
-        {
-            Colorize(Vector2.zero);
-            Colorized = true;
-        }
-    }
-    public void Colorize(Vector2 hitPosition)
-    {
-        rend.GetPropertyBlock(Mbp);
-        LeanTween.value(grayscaleAmount, 0f, colorizingDuration).setOnUpdate((value) =>
-        {
-            Mbp.SetFloat("_GrayscaleAmount", value);
-            rend.SetPropertyBlock(Mbp);
-        }).setOnComplete(() => 
-        {
-            Colorized = true;
-            grayscaleAmount = 0f;
-            Mbp.SetFloat("_GrayscaleAmount", grayscaleAmount);
-            rend.SetPropertyBlock(Mbp);
-
-            LeanTween.scale(gameObject, Vector3.one * 1.1f, 0.25f).setEasePunch();
-            ColoringFinished?.Invoke(this);
-        });
-    }
-
-    // Adds color when hovering 
-    void OnMouseOver() => AddColor();
     public void AddColor()
     {
-        Debug.LogError(grayscaleAmount);
+        if (Colorized)
+            return;
 
         if (grayscaleAmount > 0)
         {
